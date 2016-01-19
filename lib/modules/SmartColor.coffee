@@ -28,11 +28,17 @@
 
             # Matches VEC: eg
             # vec3(0.44f, 0.3, 0) and vec3(1.0, 0.42, .4) and vec3(      1f  ,    0.4   ,   1.0 )
-            VEC: /vec3\s*?\(\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\)/i
+            # VEC: /vec3\s*?\(\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\)/i
+
+            # HACK: Aaron Barrett changed VEC so that it matches Lua table format.
+            VEC: /\{\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\}/i
 
             # Matches VECA: eg
             # vec4(0.4, 0.33, 0f, 0.5) and vec4(1.0, 0.4121231f, .4, 1.0f) and vec4(      1f   ,    0.4   ,   1.0, 0 )
-            VECA: /vec4\s*?\(\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\)/i
+            # VECA: /vec4\s*?\(\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\)/i
+
+            # HACK: Aaron Barrett changed VECA so that it matches Lua table format.
+            VECA: /\{\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\,\s*?([0]?\.[0-9]*|1\.0|1|0)[f]?\s*?\}/i
 
             # Matches RGB: eg.
             # rgb(0, 99, 199) and rgb ( 255   , 180   , 255 )
@@ -175,13 +181,19 @@
             # ---------------------------
                 toVEC: ->
                     _vecArray = @toVECArray()
-                    return s "vec3(#{ f _vecArray[0] }, #{ f _vecArray[1] }, #{ f _vecArray[2] })"
+                    # return s "vec3(#{ f _vecArray[0] }, #{ f _vecArray[1] }, #{ f _vecArray[2] })"
+
+                    # HACK: Aaron Barrett changed toVEC so that it returns Lua table format.
+                    return s "{#{ f _vecArray[0] }, #{ f _vecArray[1] }, #{ f _vecArray[2] }}"
                 toVECArray: -> Convert.rgbToVec @toRGBArray()
 
                 # VECA
                 toVECA: ->
                     _vecaArray = @toVECAArray()
-                    return s "vec4(#{ f _vecaArray[0] }, #{ f _vecaArray[1] }, #{ f _vecaArray[2] }, #{ f _vecaArray[3] })"
+                    # return s "vec4(#{ f _vecaArray[0] }, #{ f _vecaArray[1] }, #{ f _vecaArray[2] }, #{ f _vecaArray[3] })"
+
+                    # HACK: Aaron Barrett changed toVECA so that it returns Lua table format.
+                    return s "{#{ f _vecaArray[0] }, #{ f _vecaArray[1] }, #{ f _vecaArray[2] }, #{ f _vecaArray[3] }}"
                 toVECAArray: -> @toVECArray().concat [@getAlpha()]
 
             #  HEX
